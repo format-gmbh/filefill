@@ -19,6 +19,7 @@ namespace IchHabRecht\Filefill\Repository;
 
 use Doctrine\DBAL\ParameterType;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Resource\FileInterface;
 use TYPO3\CMS\Core\Resource\ProcessedFileRepository;
 use TYPO3\CMS\Core\Resource\ResourceFactory;
@@ -105,8 +106,8 @@ class FileRepository
         $rows = $this->findByIdentifier($identifier, $storage);
         foreach ($rows as $row) {
             try {
-                $file = $this->resourceFactory->getFileObjectByStorageAndIdentifier($row['storage'], $row['identifier']);
-                if (!$file) {
+                $file = $this->resourceFactory->getFileObjectFromCombinedIdentifier((int)$row['storage'] . ':' . $row['identifier']);
+                if (!$file instanceof File) {
                     continue;
                 }
 
